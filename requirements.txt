@@ -1,2 +1,7 @@
 pandas
 numpy
+ipykernel
+scikit-learn
+lightgbm
+matplotlib
+seaborn
