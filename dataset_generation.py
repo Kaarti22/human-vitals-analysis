@@ -11,9 +11,10 @@ def generate_sample():
     gender = random.choice(genders)
     height = np.random.normal(165, 10)
     weight = np.random.normal(70, 15)
+    
+    hasDiabetes = random.choice([0, 1])
     hasBpHigh = random.choice([0, 1])
     hasBpLow = random.choice([0, 1])
-    hasDiabetes = random.choice([0, 1])
 
     heartRate = np.random.normal(80, 15)
     SpO2 = np.random.normal(97, 2)
@@ -26,15 +27,39 @@ def generate_sample():
     temperature = np.clip(temperature, 34, 41)
 
     abnormal = 0
-    if hasBpHigh or hasBpLow or hasDiabetes:
-        abnormal = 1
-    if not (60 <= heartRate <= 100):
-        abnormal = 1
-    if SpO2 < 95:
-        abnormal = 1
-    if not (36.1 <= temperature <= 37.2):
-        abnormal = 1
-    
+
+    if hasDiabetes:
+        if not (60 <= heartRate <= 110):
+            abnormal = 1
+        if SpO2 < 93:
+            abnormal = 1
+        if not (36.1 <= temperature <= 37.5):
+            abnormal = 1
+
+    elif hasBpHigh:
+        if not (60 <= heartRate <= 100):
+            abnormal = 1
+        if SpO2 < 95:
+            abnormal = 1
+        if not (36.1 <= temperature <= 37.2):
+            abnormal = 1
+
+    elif hasBpLow:
+        if not (55 <= heartRate <= 100):
+            abnormal = 1
+        if SpO2 < 95:
+            abnormal = 1
+        if not (36.1 <= temperature <= 37.2):
+            abnormal = 1
+
+    else:
+        if not (60 <= heartRate <= 100):
+            abnormal = 1
+        if SpO2 < 95:
+            abnormal = 1
+        if not (36.1 <= temperature <= 37.2):
+            abnormal = 1
+
     return {
         'age': age,
         'bloodGroup': bloodGroup,
@@ -54,4 +79,4 @@ n_samples = 5000
 data = [generate_sample() for _ in range(n_samples)]
 df = pd.DataFrame(data)
 
-df.to_csv("synthetic_vitals_dataset.csv", index=False)
+df.to_csv('synthetic_vitals_dataset_conditioned.csv', index=False)
