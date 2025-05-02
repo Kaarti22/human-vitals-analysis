@@ -4,3 +4,6 @@ ipykernel
 scikit-learn
 matplotlib
 seaborn
+fastapi
+uvicorn
+pydantic
