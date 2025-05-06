@@ -18,47 +18,41 @@ def generate_sample():
 
     heartRate = np.random.normal(80, 15)
     SpO2 = np.random.normal(97, 2)
-    temperature = np.random.normal(36.8, 0.5)
-
+    
+    # Skin temperature, not core body temperature
+    temperature = np.random.normal(32.0, 1.5)  # Centered around 32°C
+    # Clamping ranges for realistic skin temperatures
     height = np.clip(height, 140, 200)
     weight = np.clip(weight, 40, 150)
     heartRate = np.clip(heartRate, 30, 180)
     SpO2 = np.clip(SpO2, 70, 100)
-    temperature = np.clip(temperature, 34, 41)
+    temperature = np.clip(temperature, 28, 36)
 
-    abnormal = 0
+    abnormal_count = 0
 
+    # Checking for abnormal vitals, but now needing at least two abnormal conditions
     if hasDiabetes:
-        if not (60 <= heartRate <= 110):
-            abnormal = 1
-        if SpO2 < 93:
-            abnormal = 1
-        if not (36.1 <= temperature <= 37.5):
-            abnormal = 1
+        if not (60 <= heartRate <= 110): abnormal_count += 1
+        if SpO2 < 93: abnormal_count += 1
+        if not (30.5 <= temperature <= 34.5): abnormal_count += 1
 
     elif hasBpHigh:
-        if not (60 <= heartRate <= 100):
-            abnormal = 1
-        if SpO2 < 95:
-            abnormal = 1
-        if not (36.1 <= temperature <= 37.2):
-            abnormal = 1
+        if not (60 <= heartRate <= 100): abnormal_count += 1
+        if SpO2 < 95: abnormal_count += 1
+        if not (30.5 <= temperature <= 34.2): abnormal_count += 1
 
     elif hasBpLow:
-        if not (55 <= heartRate <= 100):
-            abnormal = 1
-        if SpO2 < 95:
-            abnormal = 1
-        if not (36.1 <= temperature <= 37.2):
-            abnormal = 1
+        if not (55 <= heartRate <= 100): abnormal_count += 1
+        if SpO2 < 95: abnormal_count += 1
+        if not (30.5 <= temperature <= 34.2): abnormal_count += 1
 
     else:
-        if not (60 <= heartRate <= 100):
-            abnormal = 1
-        if SpO2 < 95:
-            abnormal = 1
-        if not (36.1 <= temperature <= 37.2):
-            abnormal = 1
+        if not (60 <= heartRate <= 100): abnormal_count += 1
+        if SpO2 < 95: abnormal_count += 1
+        if not (30.5 <= temperature <= 34.2): abnormal_count += 1
+
+    # Mark as abnormal only if at least 2 abnormal vitals
+    abnormal = 1 if abnormal_count >= 2 else 0
 
     return {
         'age': age,
@@ -79,4 +73,4 @@ n_samples = 5000
 data = [generate_sample() for _ in range(n_samples)]
 df = pd.DataFrame(data)
 
-df.to_csv('synthetic_vitals_dataset_conditioned.csv', index=False)
+df.to_csv('synthetic_vitals_dataset_conditioned_skin_temp_updated.csv', index=False)
